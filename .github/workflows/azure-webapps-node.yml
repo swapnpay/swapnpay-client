@@ -52,4 +52,5 @@ jobs:
         with:
           app-name: 'swapnpay-frontend'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_4e3c89eb7c9f4f8384ecce3f3956aed6 
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_4e3c89eb7c9f4f8384ecce3f3956aed6 }}
+          package: .
