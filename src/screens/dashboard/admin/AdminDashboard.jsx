@@ -44,7 +44,7 @@ const AdminDashboard = () => {
     return (
         <div className='pl-4 pr-4 pb-10 md:px-8 mt-20 flex flex-wrap justify-between items-start w-full'>
             <div className="w-full flex flex-wrap justify-between items-center">
-                {[1, 2, 3, 4].map((item, index) => (
+                {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
                     <AdminOverviewCard
                         key={index}
                         item={item}

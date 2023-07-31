@@ -26,4 +26,4 @@ const ProfileCard = ({ classes, icon, label, title }) => {
     )
 }
 
-export default ProfileCard
+export default ProfileCard  

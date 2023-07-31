@@ -18,6 +18,7 @@ import ElectricityPayment from '../../screens/dashboard/subscreens/cable_electri
 
 const ModalPages = () => {
     const { modalPages } = useGlobalContext()
+    
 
     return (
         <Fragment>
@@ -68,7 +69,7 @@ const ModalPages = () => {
 
             {modalPages.showBvnVerififcationScreen && (
                 <VerifyBVN />
-            )}
+            )}  
 
 
             {modalPages.showVoterCardVerififcationScreen && (
