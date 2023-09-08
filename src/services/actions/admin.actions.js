@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { addBlogItemRoute, deleteBlogItemRoute, fetchBlogItemsRoute, fetchDashboardInfoRoute, fetchInternationalTransfersRoute, fetchUnverifiedUsersRoute, fetchUsersRoute, flutterwaveBalanceRoute, getCardDepositsRoute, getFailedTransactionRoute, getFincraBalanceRoute, getReferralFeeRoute, getSchoolFeesPaymentRoute, getSudoBalanceRoute, getTranasactionsFeeRoute, getTransactionsRoutes, getUserCountRoutes, getUserTransactionsRoute, patchCardDepositsRoute, patchFailedTransactionRoute, patchReferralFeeRoute, patchTransacationsFeeRoute, patchUsersRoute, updateBlogItemRoute, updateInternationalTransfersRoute, updateSchoolFeesStatusRoute, verifyUserAccountRoute } from "../routes/admin.routes"
+import { addBlogItemRoute, creditCryptoFundedUserRoute, deleteBlogItemRoute, fetchBlogItemsRoute, fetchDashboardInfoRoute, fetchInternationalTransfersRoute, fetchUnverifiedUsersRoute, fetchUsersRoute, flutterwaveBalanceRoute, getAllCryptoDepositRoute, getCardDepositsRoute, getFailedTransactionRoute, getFincraBalanceRoute, getReferralFeeRoute, getSchoolFeesPaymentRoute, getSudoBalanceRoute, getTranasactionsFeeRoute, getTransactionsRoutes, getUserCountRoutes, getUserTransactionsRoute, patchCardDepositsRoute, patchFailedTransactionRoute, patchReferralFeeRoute, patchTransacationsFeeRoute, patchUsersRoute, updateBlogItemRoute, updateInternationalTransfersRoute, updateSchoolFeesStatusRoute, verifyUserAccountRoute } from "../routes/admin.routes"
 
 
 
@@ -286,6 +286,25 @@ export const patchCardDepositAction = createAsyncThunk(
     }
 )
 
+export const creditCryptoFundedUser = createAsyncThunk(
+    'admin/creditCryptoFundedUser',
+    async ({ formData, toast }, { rejectWithValue }) => {
+        try {
+    
+            const { data } = await creditCryptoFundedUserRoute(formData)
+            toast.success("User credited successfully")
+
+
+
+            return data
+        } catch (error) {
+
+            toast.warning("User wasn't credited")
+            return rejectWithValue(null)
+        }
+    }
+)
+
 
 export const getFailedTransactionAction = createAsyncThunk(
     'admin/getFailedTransactionAction',
@@ -312,7 +331,7 @@ export const patchFailedTransactionAction = createAsyncThunk(
 
             return data
         } catch (error) {
-            console.log(error);
+
             toast.warning("User wasn't debited")
             return rejectWithValue(null)
         }
@@ -505,6 +524,20 @@ export const updateInternatonalTransferAction = createAsyncThunk(
         } catch (error) {
             console.log(error);
             toast.warning("Process failed")
+            return rejectWithValue(null)
+        }
+    }
+)
+
+export const getCryptoDeposits = createAsyncThunk(
+    'admin/getCryptoDeposits',
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await getAllCryptoDepositRoute()
+            console.log(data)
+            return data.data
+        } catch (error) {
+            console.log(error)
             return rejectWithValue(null)
         }
     }

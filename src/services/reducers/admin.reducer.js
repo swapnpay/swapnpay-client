@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { adminAddBlogItem, adminDeleteBlogItem, adminFetchBlogItems, adminFetchDashboardInfo, adminFetchUnverifiedUsersAction, adminResetStateProperty, adminUpdateBlogItem, adminVerifyUserAccountAction, fetchInternationalTransactionAction, fetchUsersActions, flutterWaveBalanceAction, getCardDepositsActions, getFailedTransactionAction, getFincraBalanceAction, getReferralFeeAction, getSchoolFeesPaymentAction, getSudoBalanceAction, getTransactionsAction, getTransactionsFeeAction, getUserCountAction, getUsersTransactionsAction, patchCardDepositAction, patchFailedTransactionAction, patchReferralFeeAction, patchTransactionsFeeAction, patchUserAction, schoolFeesDetails, updateInternatonalTransferAction, updateSchoolFeesStatusAction } from '../actions/admin.actions'
+import { adminAddBlogItem, adminDeleteBlogItem, adminFetchBlogItems, adminFetchDashboardInfo, adminFetchUnverifiedUsersAction, adminResetStateProperty, adminUpdateBlogItem, adminVerifyUserAccountAction, creditCryptoFundedUser, fetchInternationalTransactionAction, fetchUsersActions, flutterWaveBalanceAction, getCardDepositsActions, getCryptoDeposits, getFailedTransactionAction, getFincraBalanceAction, getReferralFeeAction, getSchoolFeesPaymentAction, getSudoBalanceAction, getTransactionsAction, getTransactionsFeeAction, getUserCountAction, getUsersTransactionsAction, patchCardDepositAction, patchFailedTransactionAction, patchReferralFeeAction, patchTransactionsFeeAction, patchUserAction, schoolFeesDetails, updateInternatonalTransferAction, updateSchoolFeesStatusAction } from '../actions/admin.actions'
 
 
 const adminSlice = createSlice({
@@ -24,6 +24,7 @@ const adminSlice = createSlice({
         failed_transactions: null,
         manage_users: null,
         user_transactions: null,
+        crypto_deposits: null,
         international_transactions: null
     },
     extraReducers: (builder) => {
@@ -402,6 +403,29 @@ const adminSlice = createSlice({
             }
         })
         builder.addCase(adminResetStateProperty.rejected, (state, action) => {
+            state.adminRequestLoading = false
+        })
+
+
+        builder.addCase(getCryptoDeposits.pending, (state, action) => {
+            state.adminRequestLoading = true
+        })
+        builder.addCase(getCryptoDeposits.fulfilled, (state, action) => {
+            state.adminRequestLoading = false
+            state.crypto_deposits = action.payload
+        })
+        builder.addCase(getCryptoDeposits.rejected, (state, action) => {
+            state.adminRequestLoading = false
+        })
+
+        builder.addCase(creditCryptoFundedUser.pending, (state, action) => {
+            state.adminRequestLoading = true
+        })
+        builder.addCase(creditCryptoFundedUser.fulfilled, (state, action) => {
+            state.adminRequestLoading = false
+
+        })
+        builder.addCase(creditCryptoFundedUser.rejected, (state, action) => {
             state.adminRequestLoading = false
         })
     }

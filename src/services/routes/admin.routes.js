@@ -56,6 +56,9 @@ export const updateBlogItemRoute = (formData) => API.patch('/administrator/admin
 
 export const deleteBlogItemRoute = (formData) => API.delete(`/administrator/admin-blog/${formData.pkid}`)
 
+export const getAllCryptoDepositRoute = () => API.get('/administrator/crypto-deposit')
+export const creditCryptoFundedUserRoute = (formData) => API.patch('/administrator/crypto-deposit', formData)
+
 
 
 
