@@ -13,7 +13,7 @@ const ReceiveViaCrypto = ({ updateConfig }) => {
 			<BsArrowLeft
 				size={20}
 				className='cursor-pointer'
-				onClick={() => updateConfig({ showDefault: true, showReceiveViaCrypto: false })}
+				onClick={() => updateConfig({ showDefault: true, showReceiveViaCrypto: false, showUSDCInfo: false })}
 			/>
 
 			<div className="space-y-2">
@@ -32,12 +32,12 @@ const ReceiveViaCrypto = ({ updateConfig }) => {
 							if (item.type === 'USDT') {
 								updateConfig({ showReceiveViaCrypto: false, showUSDTInfo: true, showUSDCInfo: false, showBUSDInfo: false })
 							}
-							if (item.type === 'USDC') {
-								updateConfig({ showReceiveViaCrypto: false, showUSDTInfo: false, showUSDCInfo: true, showBUSDInfo: false })
-							}
-							if (item.type === 'BUSD') {
-								updateConfig({ showReceiveViaCrypto: false, showUSDTInfo: false, showUSDCInfo: false, showBUSDInfo: true })
-							}
+							// if (item.type === 'USDC') {
+							// 	updateConfig({ showReceiveViaCrypto: false, showUSDTInfo: false, showUSDCInfo: true, showBUSDInfo: false })
+							// }
+							// if (item.type === 'BUSD') {
+							// 	updateConfig({ showReceiveViaCrypto: false, showUSDTInfo: false, showUSDCInfo: false, showBUSDInfo: true })
+							// }
 						}}
 						className='w-full mb-4 py-3 px-4 rounded-lg bg-white flex justify-between items-center cursor-pointer'
 					>
@@ -53,7 +53,9 @@ const ReceiveViaCrypto = ({ updateConfig }) => {
 						</div>
 
 						<FiChevronRight />
-						<span className='bg-red-400 px-2 py-1 text-white'>Coming soon</span>
+						{item.type !== 'USDT' && (
+							<span className='bg-red-400 px-2 py-1 text-white text-[12px] rounded-md'>Coming soon</span>
+						)}
 					</div>
 				))}
 

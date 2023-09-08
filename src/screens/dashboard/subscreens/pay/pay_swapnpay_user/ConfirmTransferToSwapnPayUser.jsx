@@ -10,7 +10,8 @@ import { FormTextInput, HeaderText, IconButton, LoadingButtonOne } from '../../.
 const ConfirmTransferToSwapnPayUser = ({ formData, handleChange, updateConfig }) => {
     const dispatch = useDispatch()
 
-    const { user, userRequestStatus } = useSelector(state => state.auth)
+    const { user } = useSelector(state => state.auth)
+    const { userRequestStatus } = useSelector(state => state.user)
 
     const handleSubmit = (e) => {
         e.preventDefault()

@@ -19,6 +19,9 @@ export const fetchBanksListRoute = () => API.get(`/transactions/bank-list`)
 export const bankTransferRoute = (formData) => API.post(`/transactions/bank-withdrawal`, formData)
 
 
+export const funcViaUSDTRoute = (formData) => API.post(`/transactions/crypto-payment-initialization`, formData)
+
+
 export const schoolPaymentRoute = (formData) => API.post(`/administrator/pay-school-fees`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 
 

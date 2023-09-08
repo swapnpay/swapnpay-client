@@ -33,7 +33,7 @@ const Receive = () => {
 					<BsArrowLeft
 						size={20}
 						className='cursor-pointer'
-						onClick={() => updateModalPages({ showReciveScreen: false })}
+						onClick={() => updateModalPages({ showReciveScreen: false, showUSDTInfo: false })}
 					/>
 
 					<div className="space-y-2">
@@ -52,9 +52,9 @@ const Receive = () => {
 									if (item.type === 'USERNAME') {
 										updateConfig({ showDefault: false, showReceiveViaUsername: true })
 									}
-									// if (item.type === 'CRYPTO') {
-									// 	updateConfig({ showDefault: false, showReceiveViaCrypto: true })
-									// }
+									if (item.type === 'CRYPTO') {
+										updateConfig({ showDefault: false, showReceiveViaCrypto: true })
+									}
 									if (item.type === 'TRANSFER') {
 										updateConfig({ showDefault: false, showReceiveViaBankTransfer: true })
 									}
@@ -82,7 +82,7 @@ const Receive = () => {
 			)}
 
 			{config.showReceiveViaUsername && (
-				<ReceiveViaUsername
+				<ReceiveViaUserna me
 					updateConfig={updateConfig}
 				/>
 			)}

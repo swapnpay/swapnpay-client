@@ -11,6 +11,8 @@ const HomeWalletCard = ({ config, updateConfig }) => {
 
     const { dollarWallet, nairaWallet } = useSelector(state => state.user)
 
+    console.log(dollarWallet, nairaWallet)
+
     return (
         <div
             onClick={() => {
@@ -21,7 +23,7 @@ const HomeWalletCard = ({ config, updateConfig }) => {
             className="flex flex-col space-y-5 justify-between items-center h-[250px w-full rounded-xl bg-gradient-to-bl from-primary-light to-primary py-5 px-4 md:px-10">
             <h1 className='font-bold text-[30px] text-white font-spacegrotesk'>
                 {config.currentCurrency === 'NGN' ? (
-                    <span>&#8358; {nairaWallet ? Math.floor(nairaWallet?.availableBalance * 100) / 100 : '0.0'}</span>
+                    <span>&#8358; {nairaWallet ? Math.floor(nairaWallet?.accountBalance * 100) / 100 : '0.0'}</span>
                 ) : (
                     <span>$ {dollarWallet ? Math.floor(dollarWallet?.amount * 100) / 100 : '0.0'}</span>
                 )}
@@ -31,7 +33,7 @@ const HomeWalletCard = ({ config, updateConfig }) => {
                 {/* <p className='text-[12px]'>Account Balance</p> */}
                 <p className='text-[18px] '>
                     {config.currentCurrency === 'NGN' ? (
-                        <span>{nairaWallet ? Math.floor(nairaWallet?.availableBalance * 100) / 100: '0.0'}</span>
+                        <span>{nairaWallet ? Math.floor(nairaWallet?.accountBalance * 100) / 100: '0.0'}</span>
                     ) : (
                         <span>{dollarWallet ? Math.floor(dollarWallet?.amount * 100) / 100: '0.0'}</span>
                     )}

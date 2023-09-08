@@ -13,7 +13,7 @@ export const authGenerateEmailVerificationOTPRoute = (formData) => API.post('/us
 export const authEmailVerificationRoute = (formData) => API.post('/user/email-verification', formData)
 
 
-export const authActivateAccountRoute = (formData) => API.post('/user/create-sudo-customer', formData)
+export const authActivateAccountRoute = (formData) => API.post('/user/create-safehaven-customer', formData)
 
 
 export const authUserLoginRoute = (formData) => API.post('/user/login', formData)

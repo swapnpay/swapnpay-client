@@ -6,7 +6,7 @@ import {
     userGenerateCableSubscription, userResetStateProperty, userTransferToSwapnPayUser, userFetchElectricityDiscos,
     userGenerateElectricitySubscription,
     getNairaWallet, resetPasswordOtpAction, resetPinOtpAction, resetTransactionPinAction, verifyPasswordOtpAndResetAction, iDverificationAction, userFetchTransactions, getConversionRateAction, getTransactionsFeeAction,
-    generateQuoteAction, swapCurrencyAction, createVirtualCardAction, getUserCardsAction, userFetchReferrals, userClaimRefferals, fundAccountWithCard, userFetchBlogItems
+    generateQuoteAction, swapCurrencyAction, createVirtualCardAction, getUserCardsAction, userFetchReferrals, userClaimRefferals, fundAccountWithCard, userFetchBlogItems, userFundViaUSDT
 } from '../actions/user.actions'
 
 
@@ -110,6 +110,19 @@ const userSlice = createSlice({
         })
         builder.addCase(userFetchBanksList.rejected, (state, action) => {
             state.userRequestLoading = false
+        })
+
+        builder.addCase(userFundViaUSDT.pending, (state, action) => {
+            state.userRequestLoading = true
+            state.userRequestStatus = 'PENDING'
+        })
+        builder.addCase(userFundViaUSDT.fulfilled, (state, action) => {
+            state.userRequestLoading = false
+            state.userRequestStatus = 'SUCCESS'
+        })
+        builder.addCase(userFundViaUSDT.rejected, (state, action) => {
+            state.userRequestLoading = false
+            state.userRequestStatus = 'FAILED'
         })
 
         builder.addCase(userBankTransfer.pending, (state, action) => {

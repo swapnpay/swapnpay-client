@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
-import { createVirtualCardRoute, fetchBlogsRoute, fetchReferralsRoute, fetchTransactionsRoute, generateQuoteRoute, getConverstionRateRoute, getNairaWalletDetails, getTransactionFeeRoute, getUserCardsRoute, iDverificationRoute, receiveWithCard, resetPasswordOtpRoute, resetPinOtpRoute, resetPinOtpVerification, resetTransactionPin, swapCurrencyRoute, userClaimReferralRoute, verifyPasswordOtpAndResetRoute } from '../routes/user.routes'
+import { createVirtualCardRoute, fetchBlogsRoute, fetchReferralsRoute, fetchTransactionsRoute, funcViaUSDTRoute, generateQuoteRoute, getConverstionRateRoute, getNairaWalletDetails, getTransactionFeeRoute, getUserCardsRoute, iDverificationRoute, receiveWithCard, resetPasswordOtpRoute, resetPinOtpRoute, resetPinOtpVerification, resetTransactionPin, swapCurrencyRoute, userClaimReferralRoute, verifyPasswordOtpAndResetRoute } from '../routes/user.routes'
 import { airtimeDataPurchaseRoute, bankTransferRoute, cableAndElectricitySubscriptionRoute, electricityDiscosRoute, fetchBanksListRoute, fetchCablePlansRoute, fetchDataBundlesRoute, fetchDollarWalletBalanceRoute, fetchNairaWalletBalanceRoute, schoolPaymentRoute, transferToSwapnPayUserRoute } from "../routes/user.routes"
 
 
@@ -79,6 +79,27 @@ export const userFetchBanksList = createAsyncThunk(
             return data.data
         } catch (error) {
             console.log(error)
+            return rejectWithValue(null)
+        }
+    }
+)
+
+
+export const userFundViaUSDT = createAsyncThunk(
+    'user/userFundViaUSDT',
+    async ({ formData, toast, updateConfig }, { rejectWithValue }) => {
+        try {
+            const { data } = await funcViaUSDTRoute(formData)
+
+            toast.success('Transaction successful')
+            updateConfig({ showReceiveViaCrypto: true, showUSDCInfo: false, showDefault: false })
+
+            console.log(data)
+
+            return data.data
+        } catch (error) {
+            console.log(error)
+            toast.warning('An error occured')
             return rejectWithValue(null)
         }
     }
