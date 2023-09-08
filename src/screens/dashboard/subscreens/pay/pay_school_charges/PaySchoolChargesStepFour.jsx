@@ -8,10 +8,10 @@ import { FormCurrencyInput, HeaderText, IconButton, TransactionConfirmationText 
 const PaySchoolChargesStepFour = ({ formData, updateFormData, handleChange, updateConfig }) => {
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		formData.currency = "USD"
 
 		if (!formData.amount) return toast.error('Amount is required')
-		console.log(formData)
-
+	
 		updateConfig({ showDefault: false, showPaySchoolDuesStepOne: false, showPaySchoolDuesStepTwo: false, showPaySchoolDuesStepThree: false, showPaySchoolDuesStepFour: false, showConfirmSchoolPaymentTransaction: true })
 	}
 
@@ -33,7 +33,7 @@ const PaySchoolChargesStepFour = ({ formData, updateFormData, handleChange, upda
 
 			<div className="flex flex-col w-full">
 				<form onSubmit={handleSubmit}>
-					<FormCurrencyInput
+					{/* <FormCurrencyInput
 						source={"NGN"}
 						name={'amount'}
 						placeHolder={'Amount'}
@@ -42,9 +42,18 @@ const PaySchoolChargesStepFour = ({ formData, updateFormData, handleChange, upda
 						currency={formData.currency}
 						updateFormData={updateFormData}
 						classes={'mb-2 rounded-xl py-4 mb-10'}
+					/> */}
+					<input 
+					className='border p-4 my-2 w-full rounded-lg'
+					name='amount'
+					placeholder='Amount in (USD)'
+					onChange={handleChange}
+					
+					
 					/>
+					<p className='py-2'>Enter the amount of the school fees in USD</p>
 
-					<TransactionConfirmationText />
+					{/* <TransactionConfirmationText /> */}
 					<IconButton
 						type={'submit'}
 						title={'Proceed'}

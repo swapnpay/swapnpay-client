@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BsArrowLeft } from 'react-icons/bs'
 
 import { FormTextInput, HeaderText, IconButton, LoadingButtonOne } from '../../../../../components'
-import { userFundViaUSDT } from '../../../../../services/actions/user.actions'
+import { userFundViaUSDT, resetUsdtData } from '../../../../../services/actions/user.actions'
 
 
 const CryptoUSDTInfo = ({ updateConfig }) => {
@@ -12,14 +12,17 @@ const CryptoUSDTInfo = ({ updateConfig }) => {
 
     const [amount, setAmount] = useState(0)
 
-    const { userRequestStatus } = useSelector(state => state.user)
+    const { userRequestStatus, usdtData } = useSelector(state => state.user)
 
     return (
         <div className="w-full md:w-[40%] h-full bg-gray-100 px-6 lg:px-20 py-20 flex flex-col space-y-5">
             <BsArrowLeft
                 size={20}
                 className='cursor-pointer'
-                onClick={() => updateConfig({ showDefault: false, showReceiveViaCrypto: true, showUSDTInfo: false, })}
+                onClick={() => {
+                    dispatch(resetUsdtData({ data: null }))
+                    updateConfig({ showDefault: false, showReceiveViaCrypto: true, showUSDTInfo: false, })
+                }}
             />
 
             <div className="space-y-2">
@@ -27,7 +30,7 @@ const CryptoUSDTInfo = ({ updateConfig }) => {
                     text={'USDT'}
                     classes={'font-bold text-[20px] text-black'}
                 />
-                <p className='text-[14px]'>Use the details below to receive your USDT token</p>
+                <p className='text-[14px]'>Use the details below to receive your USDT token on Binance smart chain network (BSC)</p>
             </div>
 
             <div className="flex flex-col space-y-5">
@@ -61,11 +64,24 @@ const CryptoUSDTInfo = ({ updateConfig }) => {
                     type={'number'}
                     name={'receiver_username'}
                     padding={'py-3 px-5'}
-                    placeHolder={'Amount'}
+                    placeHolder={'Amount (Minimum deposit is $11)'}
                     handleChange={(e) => {
                         console.log(e.target.value)
                         setAmount(parseInt(e.target.value))
                     }}
+                    classes={'text-[12px] placeholder:text-[12px] rounded-xl mb-2'}
+                />
+                <p className='text-red-500'>The generated wallet address will expire in 15mins time & a charge of about 0.4% applies</p>
+                <FormTextInput
+                    type={'number'}
+                    name={'receiver_username'}
+                    padding={'py-3 px-5'}
+                    placeHolder={`${usdtData?.address == undefined || usdtData.address == null ? "Generated wallet address" : usdtData?.address}`}
+                    disabled={true}
+                    // handleChange={(e) => {
+                    //     console.log(e.target.value)
+                    //     setAmount(parseInt(e.target.value))
+                    // }}
                     classes={'text-[12px] placeholder:text-[12px] rounded-xl mb-2'}
                 />
 
@@ -79,13 +95,18 @@ const CryptoUSDTInfo = ({ updateConfig }) => {
                 ) : (
                     <IconButton
                         type={'submit'}
-                        title={'Confirm'}
+                        title={'Generate wallet address'}
                         width={'w-full'}
                         iconType={'icon-right'}
                         textColor={'text-white'}
                         classes={'py-4 text-[16px] rounded-xl bg-gradient-to-r from-primary to-primary-light'}
                         handleClick={() => {
-                            dispatch(userFundViaUSDT({ formData: { amount }, toast, updateConfig }))
+                            if (amount < 11) {
+                                return toast.warning("Minimum deposit is $11")
+
+                            } else {
+                                dispatch(userFundViaUSDT({ formData: { amount }, toast, updateConfig }))
+                            }
 
                             // updateConfig({ showDefault: false, showUSDCInfo: false, showConfirmTransaction: true })
                         }}

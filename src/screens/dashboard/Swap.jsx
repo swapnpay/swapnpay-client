@@ -48,10 +48,10 @@ const Swap = () => {
 
 	useEffect(() => {
 		if (formData.source == 'NGN') {
-			updateFormData({ ...formData, balance: parseFloat(nairaWallet?.availableBalance) })
+			updateFormData({ ...formData, balance: parseFloat(nairaWallet?.accountBalance), rate: conversionRate?.sell })
 
 		} else {
-			updateFormData({ ...formData, balance: parseFloat(dollarWallet?.amount) })
+			updateFormData({ ...formData, balance: parseFloat(dollarWallet?.amount), rate: conversionRate?.sell })
 
 		}
 	}, [formData.amount])
@@ -94,7 +94,7 @@ const Swap = () => {
 								setCurrent={setCurrent}
 								classes={'mb-2 rounded-xl py-4 mb-10 border-primary'}
 							/>
-							<p className='text-[10px] italic'>Available Balance: {formData.source == 'NGN' ? `N${Math.floor(nairaWallet?.availableBalance * 100) / 100}` : `$ ${Math.floor(dollarWallet?.amount * 100) / 100}`}</p>
+							<p className='text-[10px] italic'>Available Balance: {formData.source == 'NGN' ? `N${Math.floor(nairaWallet?.accountBalance * 100) / 100}` : `$ ${Math.floor(dollarWallet?.amount * 100) / 100}`}</p>
 
 							<div className="flex justify-center w-full">
 								<BsArrowDownCircle

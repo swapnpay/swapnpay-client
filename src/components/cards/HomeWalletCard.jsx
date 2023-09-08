@@ -11,8 +11,6 @@ const HomeWalletCard = ({ config, updateConfig }) => {
 
     const { dollarWallet, nairaWallet } = useSelector(state => state.user)
 
-    console.log(dollarWallet, nairaWallet)
-
     return (
         <div
             onClick={() => {
@@ -33,9 +31,9 @@ const HomeWalletCard = ({ config, updateConfig }) => {
                 {/* <p className='text-[12px]'>Account Balance</p> */}
                 <p className='text-[18px] '>
                     {config.currentCurrency === 'NGN' ? (
-                        <span>{nairaWallet ? Math.floor(nairaWallet?.accountBalance * 100) / 100: '0.0'}</span>
+                        <span>{nairaWallet ? Math.floor(nairaWallet?.accountBalance * 100) / 100 : '0.0'}</span>
                     ) : (
-                        <span>{dollarWallet ? Math.floor(dollarWallet?.amount * 100) / 100: '0.0'}</span>
+                        <span>{dollarWallet ? Math.floor(dollarWallet?.amount * 100) / 100 : '0.0'}</span>
                     )}
                 </p>
                 <div

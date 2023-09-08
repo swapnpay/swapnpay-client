@@ -9,7 +9,7 @@ import { getConversionRateAction, getNairaWallet, getTransactionsFeeAction, getU
 const Home = () => {
 	const dispatch = useDispatch()
 
-	const { transactions } = useSelector(state => state.user)
+	const { transactions, usdtData } = useSelector(state => state.user)
 
 	const [config, updateConfig] = useReducer((prev, next) => {
 		return { ...prev, ...next }
@@ -18,6 +18,7 @@ const Home = () => {
 	})
 
 	useEffect(() => {
+		
 		dispatch(userFetchTransactions())
 		dispatch(getNairaWallet())
 		dispatch(getConversionRateAction())

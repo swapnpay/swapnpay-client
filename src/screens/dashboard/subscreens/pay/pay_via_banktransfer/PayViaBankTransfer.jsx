@@ -4,16 +4,27 @@ import { BsArrowLeft } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { appBeneficiaries } from '../../../../../data'
-import { userFetchBanksList } from '../../../../../services/actions/user.actions'
+import { userFetchBanksList, bankDetailsVerifications } from '../../../../../services/actions/user.actions'
 import { FormBankSelectInput, FormTextInput, HeaderText, IconButton, TransactionConfirmationText } from '../../../../../components'
+import { verifyAccountDetails } from '../../../../../services/routes/user.routes'
 
 
 const PayViaBankTransfer = ({ formData, updateFormData, handleChange, updateConfig }) => {
 	const dispatch = useDispatch()
+	const { verified_account } = useSelector(state => state.user)
 
 	useEffect(() => {
 		dispatch(userFetchBanksList());
 	}, [])
+
+	useEffect(() => {
+		if (formData.account_number.length == 10) {
+			const body = { account_number: formData.account_number, bank_code: formData.bankcode }
+			console.log(body);
+			dispatch(bankDetailsVerifications({ formData: body }))
+		}
+
+	}, [formData.account_number])
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
@@ -49,7 +60,7 @@ const PayViaBankTransfer = ({ formData, updateFormData, handleChange, updateConf
 						text={'Recent Beneficiaries'}
 						classes={'font-bold text-[16px] text-black'}
 					/>
-					<div className="flex space-x-4 items-center w-full">
+					{/* <div className="flex space-x-4 items-center w-full">
 						{appBeneficiaries.map((beneficiary, index) => (
 							<div
 								key={index}
@@ -63,10 +74,11 @@ const PayViaBankTransfer = ({ formData, updateFormData, handleChange, updateConf
 								<p className="text-[12px]">{beneficiary.name}</p>
 							</div>
 						))}
-					</div>
+					</div> */}
 				</div>
 				<form onSubmit={handleSubmit}>
 					<FormBankSelectInput
+
 						bank={formData.bank}
 						handleChange={(bank) => {
 							updateFormData({ bank: bank.name, bankcode: bank.bankCode })
@@ -80,6 +92,17 @@ const PayViaBankTransfer = ({ formData, updateFormData, handleChange, updateConf
 						handleChange={handleChange}
 						classes={'text-[12px] placeholder:text-[12px] rounded-xl mb-2'}
 					/>
+					<FormTextInput
+						name={'Account Name'}
+						padding={'py-3 px-5'}
+						placeHolder={verified_account?.data?.accountName ?? ""}
+						handleChange={handleChange}
+						disabled={true}
+						classes={'text-[12px] placeholder:text-[12px] rounded-xl mb-2'}
+					/>
+
+
+
 					<FormTextInput
 						name={'amount'}
 						padding={'py-3 px-5'}

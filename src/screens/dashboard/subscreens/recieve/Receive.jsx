@@ -82,7 +82,7 @@ const Receive = () => {
 			)}
 
 			{config.showReceiveViaUsername && (
-				<ReceiveViaUserna me
+				<ReceiveViaUsername
 					updateConfig={updateConfig}
 				/>
 			)}

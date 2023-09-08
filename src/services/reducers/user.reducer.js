@@ -6,7 +6,7 @@ import {
     userGenerateCableSubscription, userResetStateProperty, userTransferToSwapnPayUser, userFetchElectricityDiscos,
     userGenerateElectricitySubscription,
     getNairaWallet, resetPasswordOtpAction, resetPinOtpAction, resetTransactionPinAction, verifyPasswordOtpAndResetAction, iDverificationAction, userFetchTransactions, getConversionRateAction, getTransactionsFeeAction,
-    generateQuoteAction, swapCurrencyAction, createVirtualCardAction, getUserCardsAction, userFetchReferrals, userClaimRefferals, fundAccountWithCard, userFetchBlogItems, userFundViaUSDT
+    generateQuoteAction, swapCurrencyAction, createVirtualCardAction, getUserCardsAction, userFetchReferrals, userClaimRefferals, fundAccountWithCard, userFetchBlogItems, userFundViaUSDT, resetUsdtData, bankDetailsVerifications
 } from '../actions/user.actions'
 
 
@@ -37,7 +37,9 @@ const userSlice = createSlice({
         transactionsFee: null,
         generatedQuote: null,
         userCards: null,
+        usdtData:null,
         referrals: null,
+        verified_account: null
 
     },
     extraReducers: (builder) => {
@@ -118,6 +120,7 @@ const userSlice = createSlice({
         })
         builder.addCase(userFundViaUSDT.fulfilled, (state, action) => {
             state.userRequestLoading = false
+            state.usdtData = action.payload
             state.userRequestStatus = 'SUCCESS'
         })
         builder.addCase(userFundViaUSDT.rejected, (state, action) => {
@@ -426,6 +429,34 @@ const userSlice = createSlice({
         builder.addCase(fundAccountWithCard.rejected, (state, action) => {
             state.customLoadingState = false
 
+        })
+
+
+        builder.addCase(resetUsdtData.pending, (state, action) => {
+            state.usdtData = null
+
+        })
+        builder.addCase(resetUsdtData.fulfilled, (state, action) => {
+            state.usdtData = null
+
+
+        })
+        builder.addCase(resetUsdtData.rejected, (state, action) => {
+            state.usdtData = null            
+        })
+
+        builder.addCase(bankDetailsVerifications.pending, (state, action) => {
+            
+            state.verified_account = null
+
+        })
+        builder.addCase(bankDetailsVerifications.fulfilled, (state, action) => {
+            state.verified_account = action.payload
+
+
+        })
+        builder.addCase(bankDetailsVerifications.rejected, (state, action) => {
+            state.verified_account = null            
         })
 
 

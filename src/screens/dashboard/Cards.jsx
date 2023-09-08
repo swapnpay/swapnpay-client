@@ -3,7 +3,7 @@ import { IconLogoWhite } from '../../assets'
 import { useSelector, useDispatch } from 'react-redux'
 import IconImage from '../../components/images/IconImage'
 import { FormSelectInput, FormTextInput, HeaderText, IconButton, LoadingButtonOne, TransactionConfirmationText } from '../../components'
-import { createVirtualCardAction } from '../../services/actions/user.actions'
+import { createVirtualCardAction, getConversionRateAction } from '../../services/actions/user.actions'
 import { toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -24,6 +24,9 @@ const Cards = () => {
 
 		setFormData({ ...formData, [e.target.name]: e.target.value })
 	}
+	useEffect(() => {
+		dispatch(getConversionRateAction())
+	}, [])
 
 	return (
 		<div className='pl-8 pr-8 pb-10 mt-20 flex flex-wrap-reverse justify-between items-start w-full'>

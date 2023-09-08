@@ -92,6 +92,8 @@ export const getUserCardsRoute = () => API.get('/cards/get-user-cards')
 
 export const fetchBlogsRoute = () => API.get('/administrator/blogs/fetch-all')
 
+export const verifyAccountDetails = (formData) => API.post('/transactions/bank-details-verification', formData)
+
 
 
 

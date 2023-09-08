@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
-import { createVirtualCardRoute, fetchBlogsRoute, fetchReferralsRoute, fetchTransactionsRoute, funcViaUSDTRoute, generateQuoteRoute, getConverstionRateRoute, getNairaWalletDetails, getTransactionFeeRoute, getUserCardsRoute, iDverificationRoute, receiveWithCard, resetPasswordOtpRoute, resetPinOtpRoute, resetPinOtpVerification, resetTransactionPin, swapCurrencyRoute, userClaimReferralRoute, verifyPasswordOtpAndResetRoute } from '../routes/user.routes'
+import { createVirtualCardRoute, fetchBlogsRoute, fetchReferralsRoute, fetchTransactionsRoute, funcViaUSDTRoute, generateQuoteRoute, getConverstionRateRoute, getNairaWalletDetails, getTransactionFeeRoute, getUserCardsRoute, iDverificationRoute, receiveWithCard, resetPasswordOtpRoute, resetPinOtpRoute, resetPinOtpVerification, resetTransactionPin, swapCurrencyRoute, userClaimReferralRoute, verifyAccountDetails, verifyPasswordOtpAndResetRoute } from '../routes/user.routes'
 import { airtimeDataPurchaseRoute, bankTransferRoute, cableAndElectricitySubscriptionRoute, electricityDiscosRoute, fetchBanksListRoute, fetchCablePlansRoute, fetchDataBundlesRoute, fetchDollarWalletBalanceRoute, fetchNairaWalletBalanceRoute, schoolPaymentRoute, transferToSwapnPayUserRoute } from "../routes/user.routes"
 
 
@@ -91,8 +91,8 @@ export const userFundViaUSDT = createAsyncThunk(
         try {
             const { data } = await funcViaUSDTRoute(formData)
 
-            toast.success('Transaction successful')
-            updateConfig({ showReceiveViaCrypto: true, showUSDCInfo: false, showDefault: false })
+            toast.success('Address generated')
+            // updateConfig({ showReceiveViaCrypto: false, showUSDCInfo: false, showDefault: false })
 
             console.log(data)
 
@@ -104,6 +104,21 @@ export const userFundViaUSDT = createAsyncThunk(
         }
     }
 )
+
+export const resetUsdtData = createAsyncThunk(
+    'user/resetUsdtData',
+    async ({ data }, { rejectWithValue }) => {
+        try {
+            console.log(data);
+            return data
+        } catch (error) {
+            console.log(error)
+            return rejectWithValue(null)
+        }
+    }
+)
+
+
 
 
 export const userBankTransfer = createAsyncThunk(
@@ -136,7 +151,6 @@ export const userGenerateSchoolPayment = createAsyncThunk(
             toast.success('Transaction successful')
             updateConfig({ showDefault: true, showSendViaBankTransfer: false, showConfirmSchoolPaymentTransaction: false })
 
-            console.log(data)
 
             return data.data
         } catch (error) {
@@ -552,6 +566,23 @@ export const userFetchBlogItems = createAsyncThunk(
             return data.data
         } catch (error) {
             console.log(error.response)
+            return rejectWithValue(null)
+        }
+    }
+)
+
+export const bankDetailsVerifications = createAsyncThunk(
+    'user/bankDetailsVerifications',
+    async ({ formData }, { rejectWithValue }) => {
+        try {
+            console.log(formData);
+            const { data } = await verifyAccountDetails(formData)
+            console.log(data)
+
+            return data.data
+        } catch (error) {
+            console.log(error)
+            toast.warning('An error occured')
             return rejectWithValue(null)
         }
     }
