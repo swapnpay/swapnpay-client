@@ -34,6 +34,15 @@ export const airtimeDataPurchaseRoute = (formData) => API.post(`/utilities/airti
 export const fetchCablePlansRoute = (cable) => API.get(`/utilities/cable-plans/${cable}`)
 
 
+export const fetchSafeHavenServicesRoute = () => API.get(`/utilities/safehaven-services`)
+
+
+export const fetchSafeHavenServiceCategoriesRoute = (category) => API.get(`/utilities/service-categories/${category}`)
+
+
+export const fetchSafeHavenServiceCategoryProductsRoute = (category) => API.get(`/utilities/category-products/${category}`)
+
+
 export const cableAndElectricitySubscriptionRoute = (formData) => API.post(`/utilities/electricity-cable`, formData)
 
 

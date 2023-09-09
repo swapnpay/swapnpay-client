@@ -6,7 +6,7 @@ import {
     userGenerateCableSubscription, userResetStateProperty, userTransferToSwapnPayUser, userFetchElectricityDiscos,
     userGenerateElectricitySubscription,
     getNairaWallet, resetPasswordOtpAction, resetPinOtpAction, resetTransactionPinAction, verifyPasswordOtpAndResetAction, iDverificationAction, userFetchTransactions, getConversionRateAction, getTransactionsFeeAction,
-    generateQuoteAction, swapCurrencyAction, createVirtualCardAction, getUserCardsAction, userFetchReferrals, userClaimRefferals, fundAccountWithCard, userFetchBlogItems, userFundViaUSDT, resetUsdtData, bankDetailsVerifications
+    generateQuoteAction, swapCurrencyAction, createVirtualCardAction, getUserCardsAction, userFetchReferrals, userClaimRefferals, fundAccountWithCard, userFetchBlogItems, userFundViaUSDT, resetUsdtData, bankDetailsVerifications, userFetchUtilityServices, userFetchUtilityServiceCategories, userFetchUtilityServiceCategoryProducts
 } from '../actions/user.actions'
 
 
@@ -35,6 +35,9 @@ const userSlice = createSlice({
         conversionRate: null,
         customLoadingState: false,
         transactionsFee: null,
+        utilityServices: null,
+        utilityServiceCategories: null,
+        utilityServiceCategoryProducts: null,
         generatedQuote: null,
         userCards: null,
         usdtData:null,
@@ -181,6 +184,40 @@ const userSlice = createSlice({
         builder.addCase(userAirtimePurchase.rejected, (state, action) => {
             state.userRequestLoading = false
             state.userRequestStatus = 'FAILED'
+        })
+
+        builder.addCase(userFetchUtilityServices.pending, (state, action) => {
+            state.userRequestLoading = true
+        })
+        builder.addCase(userFetchUtilityServices.fulfilled, (state, action) => {
+            state.userRequestLoading = false
+            state.utilityServices = action.payload
+            state.utilityServices = action.payload
+        })
+        builder.addCase(userFetchUtilityServices.rejected, (state, action) => {
+            state.userRequestLoading = false
+        })
+
+        builder.addCase(userFetchUtilityServiceCategories.pending, (state, action) => {
+            state.userRequestLoading = true
+        })
+        builder.addCase(userFetchUtilityServiceCategories.fulfilled, (state, action) => {
+            state.userRequestLoading = false
+            state.utilityServiceCategories = action.payload
+        })
+        builder.addCase(userFetchUtilityServiceCategories.rejected, (state, action) => {
+            state.userRequestLoading = false
+        })
+
+        builder.addCase(userFetchUtilityServiceCategoryProducts.pending, (state, action) => {
+            state.userRequestLoading = true
+        })
+        builder.addCase(userFetchUtilityServiceCategoryProducts.fulfilled, (state, action) => {
+            state.userRequestLoading = false
+            state.utilityServiceCategoryProducts = action.payload
+        })
+        builder.addCase(userFetchUtilityServiceCategoryProducts.rejected, (state, action) => {
+            state.userRequestLoading = false
         })
 
         builder.addCase(userDataPurchase.pending, (state, action) => {

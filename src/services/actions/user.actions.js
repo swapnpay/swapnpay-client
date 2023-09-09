@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
-import { createVirtualCardRoute, fetchBlogsRoute, fetchReferralsRoute, fetchTransactionsRoute, funcViaUSDTRoute, generateQuoteRoute, getConverstionRateRoute, getNairaWalletDetails, getTransactionFeeRoute, getUserCardsRoute, iDverificationRoute, receiveWithCard, resetPasswordOtpRoute, resetPinOtpRoute, resetPinOtpVerification, resetTransactionPin, swapCurrencyRoute, userClaimReferralRoute, verifyAccountDetails, verifyPasswordOtpAndResetRoute } from '../routes/user.routes'
+import { createVirtualCardRoute, fetchBlogsRoute, fetchReferralsRoute, fetchSafeHavenServiceCategoriesRoute, fetchSafeHavenServiceCategoryProductsRoute, fetchSafeHavenServicesRoute, fetchTransactionsRoute, funcViaUSDTRoute, generateQuoteRoute, getConverstionRateRoute, getNairaWalletDetails, getTransactionFeeRoute, getUserCardsRoute, iDverificationRoute, receiveWithCard, resetPasswordOtpRoute, resetPinOtpRoute, resetPinOtpVerification, resetTransactionPin, swapCurrencyRoute, userClaimReferralRoute, verifyAccountDetails, verifyPasswordOtpAndResetRoute } from '../routes/user.routes'
 import { airtimeDataPurchaseRoute, bankTransferRoute, cableAndElectricitySubscriptionRoute, electricityDiscosRoute, fetchBanksListRoute, fetchCablePlansRoute, fetchDataBundlesRoute, fetchDollarWalletBalanceRoute, fetchNairaWalletBalanceRoute, schoolPaymentRoute, transferToSwapnPayUserRoute } from "../routes/user.routes"
 
 
@@ -194,6 +194,57 @@ export const userAirtimePurchase = createAsyncThunk(
         } catch (error) {
             console.log(error)
             toast.warning('An error occured during airtime purchase')
+            return rejectWithValue(null)
+        }
+    }
+)
+
+
+export const userFetchUtilityServices = createAsyncThunk(
+    'user/userFetchUtilityServices',
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await fetchSafeHavenServicesRoute()
+
+            console.log(data)
+
+            return data.data
+        } catch (error) {
+            console.log(error)
+            return rejectWithValue(null)
+        }
+    }
+)
+
+
+export const userFetchUtilityServiceCategories = createAsyncThunk(
+    'user/userFetchUtilityServiceCategories',
+    async ({ category }, { rejectWithValue }) => {
+        try {
+            const { data } = await fetchSafeHavenServiceCategoriesRoute(category)
+
+            console.log(data)
+
+            return data.data
+        } catch (error) {
+            console.log(error)
+            return rejectWithValue(null)
+        }
+    }
+)
+
+
+export const userFetchUtilityServiceCategoryProducts = createAsyncThunk(
+    'user/userFetchUtilityServiceCategoryProducts',
+    async ({ category }, { rejectWithValue }) => {
+        try {
+            const { data } = await fetchSafeHavenServiceCategoryProductsRoute(category)
+
+            console.log(data)
+
+            return data.data
+        } catch (error) {
+            console.log(error)
             return rejectWithValue(null)
         }
     }

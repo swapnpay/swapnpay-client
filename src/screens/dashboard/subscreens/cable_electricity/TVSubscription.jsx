@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useGlobalContext } from '../../../../context'
 import { FormCablePlansInput, FormSelectInput, FormTextInput, HeaderText, IconButton, LoadingButtonOne } from '../../../../components'
-import { userFetchCablePlans, userFetchNairaWalletBalance, userGenerateCableSubscription } from '../../../../services/actions/user.actions'
+import { userFetchCablePlans, userFetchNairaWalletBalance, userFetchUtilityServiceCategories, userFetchUtilityServiceCategoryProducts, userFetchUtilityServices, userGenerateCableSubscription } from '../../../../services/actions/user.actions'
 
 
 const TVSubscription = () => {
@@ -14,7 +14,11 @@ const TVSubscription = () => {
 	const { updateModalPages } = useGlobalContext()
 
 	const { user } = useSelector(state => state.auth)
-	const { cablePlans, nairaWallet, userRequestStatus } = useSelector(state => state.user)
+	const {
+		utilityServiceCategoryProducts,
+		cablePlans, nairaWallet, utilityServices,
+		utilityServiceCategories, userRequestStatus,
+	} = useSelector(state => state.user)
 
 	const [config, updateConfig] = useReducer((prev, next) => {
 		return { ...prev, ...next }
@@ -24,16 +28,45 @@ const TVSubscription = () => {
 	const [formData, updateFormData] = useReducer((prev, next) => {
 		return { ...prev, ...next }
 	}, {
+		vendors: [],
 		billerName: '', number: '', amount: 0, balance: 0, description: 'cable', type: '', transaction_pin: ''
 	})
 
 	useEffect(() => {
+		dispatch(userFetchUtilityServices())
 		dispatch(userFetchNairaWalletBalance())
+	}, [])
 
+	useEffect(() => {
+		if (utilityServices) {
+			const index = utilityServices?.findIndex(service => service.identifier === 'CABLETV')
+
+			// updateFormData({ service_category_id: utilityServices[index]?._id })
+
+			dispatch(userFetchUtilityServiceCategories({ category: utilityServices[index]?._id }))
+		}
+
+		if (utilityServiceCategories) {
+			const vendors = []
+
+			utilityServiceCategories?.forEach(cat => {
+				vendors.push(cat.identifier)
+			})
+
+			updateFormData({ vendors })
+		}
+	}, [utilityServices?.length, utilityServiceCategories?.length])
+
+	useEffect(() => {
 		if (formData.billerName) {
-			dispatch(userFetchCablePlans({ cable: formData.billerName }))
+			const index = utilityServiceCategories?.findIndex(cat => cat.identifier === formData.billerName)
+
+			updateFormData({ service_category_id: utilityServiceCategories[index]?._id })
+
+			dispatch(userFetchUtilityServiceCategoryProducts({ category: utilityServiceCategories[index]?._id }))
 		}
 	}, [formData.billerName])
+
 
 	useEffect(() => {
 		if (nairaWallet) {
@@ -53,6 +86,8 @@ const TVSubscription = () => {
 
 		dispatch(userGenerateCableSubscription({ formData, toast, updateConfig }))
 	}
+
+	console.log(utilityServiceCategoryProducts)
 
 	return (
 		<div className="fixed h-screen z-20 bg-[#11111190] w-full backdrop-blur-sm flex justify-end">
@@ -79,16 +114,20 @@ const TVSubscription = () => {
 							label={'Cable TV brand'}
 							handleChange={handleChange}
 							classes={'py-4 rounded-xl mb-2'}
-							items={['DSTV', 'GOTV', 'STARTIMES', 'STARSAT']}
+							items={formData.vendors}
 						/>
 						<FormCablePlansInput
 							name={''}
 							showLabel={false}
-							items={cablePlans}
+							items={utilityServiceCategoryProducts}
 							handleChange={(e) => {
-								const index = cablePlans?.findIndex(item => item.id === parseInt(e.target.value))
+								const index = utilityServiceCategoryProducts?.findIndex(item => item.bundleCode === e.target.value)
 
-								updateFormData({ type: cablePlans[index]?.biller_name, amount: (cablePlans[index]?.amount + cablePlans[index]?.fee) })
+								updateFormData({
+									amount: utilityServiceCategoryProducts[index]?.amount,
+									name: utilityServiceCategoryProducts[index]?.bundleCode,
+									bundleCode: utilityServiceCategoryProducts[index]?.bundleCode,
+								})
 							}}
 							label={'Subscription plan'}
 							classes={'py-4 rounded-xl mb-2'}

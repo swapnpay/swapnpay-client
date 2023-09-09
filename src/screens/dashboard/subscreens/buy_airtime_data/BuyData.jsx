@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useGlobalContext } from '../../../../context'
 import { FormDataBundlesInput, FormSelectInput, FormTextInput, HeaderText, IconButton, LoadingButtonOne } from '../../../../components'
-import { userDataPurchase, userFetchDataBundles, userFetchNairaWalletBalance } from '../../../../services/actions/user.actions'
+import { userDataPurchase, userFetchDataBundles, userFetchNairaWalletBalance, userFetchUtilityServiceCategories, userFetchUtilityServiceCategoryProducts, userFetchUtilityServices } from '../../../../services/actions/user.actions'
 
 
 const BuyData = () => {
@@ -14,7 +14,11 @@ const BuyData = () => {
 	const { updateModalPages } = useGlobalContext()
 
 	const { user } = useSelector(state => state.auth)
-	const { dataBundles, nairaWallet, userRequestStatus } = useSelector(state => state.user)
+	const {
+		dataBundles, nairaWallet,
+		utilityServiceCategories, userRequestStatus,
+		utilityServices, utilityServiceCategoryProducts,
+	} = useSelector(state => state.user)
 
 	const [config, updateConfig] = useReducer((prev, next) => {
 		return { ...prev, ...next }
@@ -25,10 +29,12 @@ const BuyData = () => {
 	const [formData, updateFormData] = useReducer((prev, next) => {
 		return { ...prev, ...next }
 	}, {
-		network: '', balance: 0, type: '', description: 'data', amount: 0, phone_number: '', transaction_pin: ''
+		service_category_id: '', vendors: [], bundleCode: "",
+		network: '', balance: 0, name: '', description: 'data', amount: 0, phone_number: '', transaction_pin: ''
 	})
 
 	useEffect(() => {
+		dispatch(userFetchUtilityServices())
 		dispatch(userFetchNairaWalletBalance())
 
 		if (formData.network) {
@@ -41,6 +47,38 @@ const BuyData = () => {
 			updateFormData({ balance: nairaWallet?.availableBalance })
 		}
 	}, [nairaWallet])
+
+	useEffect(() => {
+		if (utilityServices) {
+			const index = utilityServices?.findIndex(service => service.identifier === 'DATA')
+
+			// updateFormData({ service_category_id: utilityServices[index]?._id })
+
+			dispatch(userFetchUtilityServiceCategories({ category: utilityServices[index]?._id }))
+		}
+
+		console.log(utilityServiceCategories)
+
+		if (utilityServiceCategories) {
+			const vendors = []
+
+			utilityServiceCategories?.forEach(cat => {
+				vendors.push(cat.identifier)
+			})
+
+			updateFormData({ vendors })
+		}
+	}, [utilityServices?.length, utilityServiceCategories?.length])
+
+	useEffect(() => {
+		if (formData.network) {
+			const index = utilityServiceCategories?.findIndex(cat => cat.identifier === formData.network)
+
+			updateFormData({ service_category_id: utilityServiceCategories[index]?._id })
+
+			dispatch(userFetchUtilityServiceCategoryProducts({ category: utilityServiceCategories[index]?._id }))
+		}
+	}, [formData.network])
 
 	const handleChange = (e) => {
 		updateFormData({ [e.target.name]: e.target.value })
@@ -55,6 +93,7 @@ const BuyData = () => {
 		dispatch(userDataPurchase({ formData, toast, updateConfig }))
 	}
 
+	console.log(utilityServiceCategoryProducts)
 
 	return (
 		<div className="fixed h-screen z-20 bg-[#11111190] w-full backdrop-blur-sm flex justify-end">
@@ -81,18 +120,22 @@ const BuyData = () => {
 							handleChange={handleChange}
 							classes={'py-3 rounded-xl mb-2'}
 							label={'Select network provider'}
-							items={['MTN', 'GLO', 'AIRTEL', '9MOBILE']}
+							items={formData.vendors}
 						/>
 						<FormDataBundlesInput
-							name={'network'}
+							name={'bundleCode'}
 							showLabel={false}
 							classes={'py-3 rounded-xl mb-2'}
 							label={'Data plan'}
-							items={dataBundles}
+							items={utilityServiceCategoryProducts}
 							handleChange={(e) => {
-								const index = dataBundles?.findIndex(item => item.id === parseInt(e.target.value))
+								const index = utilityServiceCategoryProducts?.findIndex(item => item.bundleCode == e.target.value)
 
-								updateFormData({ amount: dataBundles[index]?.amount, type: dataBundles[index]?.biller_name })
+								updateFormData({
+									bundleCode: utilityServiceCategoryProducts[index]?.bundleCode,
+									amount: utilityServiceCategoryProducts[index]?.amount,
+									name: utilityServiceCategoryProducts[index]?.bundleCode
+								})
 							}}
 						/>
 						<FormTextInput
@@ -112,7 +155,7 @@ const BuyData = () => {
 							classes={'py-4 text-[16px] rounded-xl bg-gradient-to-r from-primary to-primary-light'}
 							handleClick={() => {
 								if (!formData.network) return toast.error('Network provider is required')
-								if (!formData.type) return toast.error('Please select a data plan')
+								if (!formData.bundleCode) return toast.error('Please select a data plan')
 								if (!formData.phone_number) return toast.error('Phone number is required')
 
 								updateConfig({ showDefault: false, showConfirmTransaction: true })

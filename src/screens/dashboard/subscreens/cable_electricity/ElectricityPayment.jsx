@@ -4,8 +4,8 @@ import { BsArrowLeft } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useGlobalContext } from '../../../../context'
-import { FormElectricityDiscosInput, FormTextInput, HeaderText, IconButton, LoadingButtonOne } from '../../../../components'
-import { userFetchElectricityDiscos, userFetchNairaWalletBalance, userGenerateElectricitySubscription } from '../../../../services/actions/user.actions'
+import { FormElectricityDiscosInput, FormSelectInput, FormTextInput, HeaderText, IconButton, LoadingButtonOne } from '../../../../components'
+import { userFetchElectricityDiscos, userFetchNairaWalletBalance, userFetchUtilityServiceCategories, userFetchUtilityServices, userGenerateElectricitySubscription } from '../../../../services/actions/user.actions'
 
 
 const ElectricityPayment = () => {
@@ -14,7 +14,7 @@ const ElectricityPayment = () => {
     const { updateModalPages } = useGlobalContext()
 
     const { user } = useSelector(state => state.auth)
-    const { electricityDiscos, nairaWallet, userRequestStatus } = useSelector(state => state.user)
+    const { electricityDiscos, nairaWallet, utilityServices, utilityServiceCategories, userRequestStatus } = useSelector(state => state.user)
 
     const [config, updateConfig] = useReducer((prev, next) => {
         return { ...prev, ...next }
@@ -24,13 +24,24 @@ const ElectricityPayment = () => {
     const [formData, updateFormData] = useReducer((prev, next) => {
         return { ...prev, ...next }
     }, {
+        vendors: '', vendType: "", service_category_id: "",
         billerName: '', number: '', amount: 0, balance: 0, description: 'electricity', type: '', transaction_pin: ''
     })
 
     useEffect(() => {
-        dispatch(userFetchElectricityDiscos())
+        dispatch(userFetchUtilityServices())
         dispatch(userFetchNairaWalletBalance())
     }, [])
+
+    useEffect(() => {
+        if (utilityServices) {
+            const index = utilityServices?.findIndex(service => service.identifier === 'UTILITY')
+
+            // updateFormData({ service_category_id: utilityServices[index]?._id })
+
+            dispatch(userFetchUtilityServiceCategories({ category: utilityServices[index]?._id }))
+        }
+    }, [utilityServices?.length, utilityServiceCategories?.length])
 
     useEffect(() => {
         if (nairaWallet) {
@@ -55,6 +66,8 @@ const ElectricityPayment = () => {
         dispatch(userGenerateElectricitySubscription({ formData, toast, updateConfig }))
     }
 
+    console.log(utilityServiceCategories)
+
     return (
         <div className="fixed h-screen z-20 bg-[#11111190] w-full backdrop-blur-sm flex justify-end">
             {config.showDefault && (
@@ -77,14 +90,24 @@ const ElectricityPayment = () => {
                         <FormElectricityDiscosInput
                             name={''}
                             showLabel={false}
-                            items={electricityDiscos}
+                            items={utilityServiceCategories}
                             handleChange={(e) => {
-                                const index = electricityDiscos?.findIndex(item => item.id === parseInt(e.target.value))
+                                const index = utilityServiceCategories?.findIndex(item => item.name === e.target.value)
 
-                                updateFormData({ type: electricityDiscos[index]?.short_name })
+                                updateFormData({
+                                    service_category_id: utilityServiceCategories[index]?._id,
+                                })
                             }}
                             label={'Electricity Disco'}
                             classes={'py-4 rounded-xl mb-2'}
+                        />
+                        <FormSelectInput
+                            name={'vendType'}
+                            showLabel={false}
+                            handleChange={handleChange}
+                            classes={'py-3 rounded-xl mb-2'}
+                            label={'Meter Type'}
+                            items={['PREPAID', 'POSTPAID']}
                         />
                         <FormTextInput
                             name={'number'}
@@ -112,7 +135,7 @@ const ElectricityPayment = () => {
                                 if (isNaN(formData.amount)) return toast.error('Invalid amount')
                                 if (!formData.amount) return toast.error('Amount is required')
                                 if (!formData.number) return toast.error('Meter number is required')
-                                if (!formData.type) return toast.error('Electricity provider is required')
+                                if (!formData.vendType) return toast.error('Electricity provider is required')
 
                                 updateConfig({ showDefault: false, showConfirmTransaction: true })
                             }}

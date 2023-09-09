@@ -18,11 +18,11 @@ const FormElectricityDiscosInput = ({ classes, name, handleChange, label, items,
                 {items?.map((item, index) => (
                     <option
                         key={index}
-                        value={item.id}
+                        value={item.name}
                         className='text-[12px]'
                     >
                         {/* {item?.name} */}
-                        {item?.short_name}
+                        {item?.name} - {item?.identifier}
                     </option>
                 ))}
             </select>

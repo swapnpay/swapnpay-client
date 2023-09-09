@@ -18,10 +18,10 @@ const FormDataBundlesInput = ({ classes, name, handleChange, label, items, showL
                 {items?.map((item, index) => (
                     <option
                         key={index}
-                        value={item.id}
+                        value={item.bundleCode}
                         className='text-[12px]'
                     >
-                        {item?.biller_name} &#8358;{item?.amount}
+                        {item?.bundleCode} - &#8358;{item?.amount}
                     </option>
                 ))}
             </select>

@@ -18,10 +18,10 @@ const FormCablePlansInput = ({ classes, name, handleChange, label, items, showLa
                 {items?.map((item, index) => (
                     <option
                         key={index}
-                        value={item.id}
+                        value={item.bundleCode}
                         className='text-[12px]'
                     >
-                        {item?.short_name} &#8358;{item?.amount + item?.fee}
+                        {item?.name} - &#8358;{item?.amount}
                     </option>
                 ))}
             </select>

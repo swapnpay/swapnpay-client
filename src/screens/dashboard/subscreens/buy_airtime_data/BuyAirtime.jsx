@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useGlobalContext } from '../../../../context'
 import { FormSelectInput, FormTextInput, HeaderText, IconButton, LoadingButtonOne } from '../../../../components'
-import { userAirtimePurchase, userFetchNairaWalletBalance } from '../../../../services/actions/user.actions'
+import { userAirtimePurchase, userFetchNairaWalletBalance, userFetchUtilityServiceCategories, userFetchUtilityServices } from '../../../../services/actions/user.actions'
 
 
 const BuyAirtime = () => {
@@ -14,7 +14,7 @@ const BuyAirtime = () => {
 	const { updateModalPages } = useGlobalContext()
 
 	const { user } = useSelector(state => state.auth)
-	const { nairaWallet, userRequestStatus } = useSelector(state => state.user)
+	const { nairaWallet, utilityServices, utilityServiceCategories, userRequestStatus } = useSelector(state => state.user)
 
 	const [config, updateConfig] = useReducer((prev, next) => {
 		return { ...prev, ...next }
@@ -25,10 +25,12 @@ const BuyAirtime = () => {
 	const [formData, updateFormData] = useReducer((prev, next) => {
 		return { ...prev, ...next }
 	}, {
+		service_category_id: '', vendors: [], provider: '', name: "AIRTIME",
 		balance: 0, type: 'AIRTIME', description: 'airtime', amount: 0, phone_number: '', transaction_pin: ''
 	})
 
 	useEffect(() => {
+		dispatch(userFetchUtilityServices())
 		dispatch(userFetchNairaWalletBalance())
 	}, [])
 
@@ -38,16 +40,42 @@ const BuyAirtime = () => {
 		}
 	}, [nairaWallet])
 
+	useEffect(() => {
+		if (utilityServices) {
+			const index = utilityServices?.findIndex(service => service.identifier === 'AIRTIME')
+
+			// updateFormData({ service_category_id: utilityServices[index]?._id })
+
+			dispatch(userFetchUtilityServiceCategories({ category: utilityServices[index]?._id }))
+		}
+
+		if (utilityServiceCategories) {
+			const vendors = []
+
+			utilityServiceCategories?.forEach(cat => {
+				vendors.push(cat.identifier)
+			})
+
+			updateFormData({ vendors })
+		}
+	}, [utilityServices?.length, utilityServiceCategories?.length])
+
 	const handleChange = (e) => {
 		updateFormData({ [e.target.name]: e.target.value })
 	}
+	// console.log(utilityServices)
+	console.log(utilityServiceCategories)
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
 
 		if (user?.credentials?.user_transaction_pin !== formData.transaction_pin) return toast.error('Invalid transaction pin')
-		console.log(formData)
 
+		const index = utilityServiceCategories?.findIndex(cat => cat.identifier === formData.provider)
+
+		updateFormData({ service_category_id: utilityServiceCategories[index]?._id })
+
+		console.log(formData)
 		dispatch(userAirtimePurchase({ formData, toast, updateConfig }))
 	}
 
@@ -77,7 +105,7 @@ const BuyAirtime = () => {
 							handleChange={handleChange}
 							classes={'py-3 rounded-xl mb-2'}
 							label={'Select network provider'}
-							items={['Mtn', 'Glo', 'Airtel', '9Mobile']}
+							items={formData.vendors}
 						/>
 						<FormTextInput
 							name={'phone_number'}
